@@ -293,8 +293,6 @@ class FunSetSuite {
       def abs: Int => Int = (x: Int) => if (x < 0) -x else x
       val s = map(all, (x: Int) => abs(x))
 
-      printSet(s)
-
       assert(!exists(s, x => x < 0))
     }
   }

@@ -87,7 +87,7 @@ trait FunSets extends FunSetsInterface {
    * Returns a set transformed by applying `f` to each element of `s`.
    */
   def map(s: FunSet, f: Int => Int): FunSet = {
-    // is f(y) inverse in s?
+    // is a value for f(y) inverse in s?
     def inverseExists(x: Int): Int => Boolean = {
       (y: Int) => x == f(y)
     }
