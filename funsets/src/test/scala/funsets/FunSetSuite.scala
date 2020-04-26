@@ -35,6 +35,12 @@ class FunSetSuite {
    */
 
   trait TestSets {
+    def id: Int => Boolean = (x: Int) => x == x
+    def isEven: Int => Boolean = (x: Int) => x % 2 == 0
+    def isOdd: Int => Boolean = (x: Int) => x % 2 != 0
+    def isPositive: Int => Boolean = (x: Int) => x > 0
+    def isNegative: Int => Boolean = (x: Int) => x < 0
+
     val s1 = singletonSet(1)
     val s2 = singletonSet(2)
     val s3 = singletonSet(3)
@@ -133,15 +139,17 @@ class FunSetSuite {
       val s = union(s1, s2)
       val t = union(s1, s3)
       val z = diff(s, t)
+
       assert(contains(z, 2))
       assert(!contains(z, 1))
       assert(!contains(z, 3))
     }
   }
 
-  @Test def `filter of evens is {2, 4, -2, 0, -100, 42}`: Unit = {
+  @Test def `filter all for evens gives {2, 4, -2, 0, -100, 42}`: Unit = {
     new TestSets {
       val s = filter(all, x => x % 2 == 0)
+
       assert(contains(s, 2))
       assert(contains(s, 4))
       assert(contains(s, -2))
@@ -157,6 +165,7 @@ class FunSetSuite {
   @Test def `filter of <= 0 is {-2, 0, -100}`: Unit = {
     new TestSets {
       val s = filter(all, x => x <= 0)
+
       assert(contains(s, -2))
       assert(contains(s, 0))
       assert(contains(s, -100))
@@ -167,9 +176,27 @@ class FunSetSuite {
     }
   }
 
+  @Test def `passes for id`: Unit = {
+    new TestSets {
+
+      val result = forall(all, id)
+      assert(result)
+    }
+  }
+
+  @Test def `true for boundary ints`: Unit = {
+    new TestSets {
+
+      val minus1000 = singletonSet(-1000)
+      val plus1000 = singletonSet(1000)
+
+      assert(forall(minus1000, id))
+      assert(forall(plus1000, id))
+    }
+  }
+
   @Test def `forAll + isPositive should be false`: Unit = {
     new TestSets {
-      def isPositive: Int => Boolean = (x: Int) => x > 0
 
       val result = forall(all, isPositive)
       assert(!result)
@@ -187,7 +214,6 @@ class FunSetSuite {
 
   @Test def `forAll + evens + isEven should be true`: Unit = {
     new TestSets {
-      def isEven: Int => Boolean = (x: Int) => x % 2 == 0
 
       val result = forall(evens, isEven)
       assert(result)
@@ -196,10 +222,80 @@ class FunSetSuite {
 
   @Test def `forAll + evens + isOdd should be false`: Unit = {
     new TestSets {
-      def isOdd: Int => Boolean = (x: Int) => x % 2 != 0
 
       val result = forall(evens, isOdd)
       assert(!result)
+    }
+  }
+
+  @Test def `exists + evens + isEven should be true`: Unit = {
+    new TestSets {
+
+      val result = exists(evens, isEven)
+      assert(result)
+    }
+  }
+
+  @Test def `exists + evens + isOdd should be false`: Unit = {
+    new TestSets {
+
+      val result = exists(evens, isOdd)
+      assert(!result)
+    }
+  }
+
+  @Test def `exists of {3, 1002} + isEven should be false`: Unit = {
+    new TestSets {
+      val s = union(singletonSet(3), singletonSet(1002))
+
+      val result = exists(s, isEven)
+      assert(!result)
+    }
+  }
+
+  @Test def `exists + all + isNegative should be true`: Unit = {
+    new TestSets {
+
+      val result = exists(all, isNegative)
+      assert(result)
+    }
+  }
+
+  @Test def `map + all + toOne should not contain any other numbers`: Unit = {
+    new TestSets {
+
+      val s = map(all, (x: Int) => 1)
+      assert(!exists(s, (x: Int) => x != 1))
+    }
+  }
+
+  @Test def `map + all + double should not contain {2, 4, 6, 8, -4, 0, -200, 84} `: Unit = {
+
+    new TestSets {
+
+      val s = map(all, (x: Int) => x * 2)
+
+      assert(contains(s, 2))
+      assert(contains(s, 4))
+      assert(contains(s, 6))
+      assert(contains(s, 8))
+      assert(contains(s, -4))
+      assert(contains(s, 0))
+      assert(contains(s, -200))
+      assert(contains(s, 84))
+    }
+  }
+
+  @Test def `map + all + abs should not contain negatives `: Unit = {
+
+    new TestSets {
+
+      def abs: Int => Int = (x: Int) => if (x < 0) -x else x
+      val s = map(all, (x: Int) => abs(x))
+
+      printSet(s)
+
+      assert(!exists(s, x => x < 0))
     }
   }
 
