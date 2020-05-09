@@ -24,22 +24,61 @@ class HuffmanSuite {
   @Test def `string2chars hello world`: Unit =
     assertEquals(List('h', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o', 'r', 'l', 'd'), string2Chars("hello, world"))
 
+  @Test def `test times yields correct result`: Unit =
+    assertEquals(List(('a', 3), ('b', 2), ('c', 1)), times(List('a','b','a','a','c','b')))
+
+  @Test def `test times yields correct result with one element`: Unit =
+    assertEquals(List(('a', 5)), times(List('a','a','a','a','a')))
 
   @Test def `make ordered leaf list for some frequency table (15pts)`: Unit =
     assertEquals(List(Leaf('e',1), Leaf('t',2), Leaf('x',3)), makeOrderedLeafList(List(('t', 2), ('e', 1), ('x', 3))))
 
+  @Test def `make ordered leaf list for reversed order input`: Unit =
+    assertEquals(List(Leaf('c',1), Leaf('b',2), Leaf('a',3)), makeOrderedLeafList(List(('a', 3), ('b', 2), ('c', 1))))
+
+  @Test def `make ordered leaf list for some frequency table of one pair`: Unit =
+    assertEquals(List(Leaf('t',2)), makeOrderedLeafList(List(('t', 2))))
+
+  @Test def `test singleton with singleton input`: Unit =
+    assertEquals(true, singleton(List(Leaf('t', 2))))
+
+  @Test def `test singleton with non-singleton input`: Unit =
+    assertEquals(false, singleton(List(Leaf('t', 2), Leaf('z', 55))))
+
+  @Test def `test singleton with empty input`: Unit =
+    assertEquals(false, singleton(List()))
 
   @Test def `combine of some leaf list (15pts)`: Unit = {
     val leaflist = List(Leaf('e', 1), Leaf('t', 2), Leaf('x', 4))
     assertEquals(List(Fork(Leaf('e',1),Leaf('t',2),List('e', 't'),3), Leaf('x',4)), combine(leaflist))
   }
 
+  @Test def `test createCodeTree`: Unit = {
+    val res = createCodeTree(List('a','b','a','a','c','b'))
+    assertEquals(Fork(Fork(Leaf('c', 1), Leaf('b', 2), List('c','b'), 3), Leaf('a',3), List('c','b','a'), 6), res)
+  }
+
+  @Test def `test decoded secret`: Unit =
+    new TestTrees {
+      decodedSecret
+    }
 
   @Test def `decode and encode a very short text should be identity (10pts)`: Unit =
     new TestTrees {
       assertEquals("ab".toList, decode(t1, encode(t1)("ab".toList)))
     }
 
+  @Test def `decode and encode a longer text should be identity`: Unit =
+    new TestTrees {
+      val phrase = "dabbada";
+      assertEquals(phrase.toList, decode(t2, encode(t2)(phrase.toList)))
+    }
+
+  @Test def `decode and encode empty input`: Unit =
+    new TestTrees {
+      val phrase = "";
+      assertEquals(phrase.toList, decode(t2, encode(t2)(phrase.toList)))
+    }
 
   @Rule def individualTestTimeout = new org.junit.rules.Timeout(10 * 1000)
 }
