@@ -33,7 +33,15 @@ object Anagrams extends AnagramsInterface {
    *
    *  Note: you must use `groupBy` to implement this method!
    */
-  def wordOccurrences(w: Word): Occurrences = ???
+  def wordOccurrences(w: Word): Occurrences = {
+    val wLower = w.toLowerCase()
+    val occurrencesToMap = wLower groupBy (c => wLower.count(_ == c))
+
+    ((for {
+      (digit, chars) <- occurrencesToMap
+      char <- chars
+    } yield char -> digit) toList) sorted
+  }
 
   /** Converts a sentence into its character occurrence list. */
   def sentenceOccurrences(s: Sentence): Occurrences = ???

@@ -13,7 +13,6 @@ class AnagramsSuite {
   @Test def `wordOccurrences: Robert (3pts)`: Unit =
     assertEquals(List(('b', 1), ('e', 1), ('o', 1), ('r', 2), ('t', 1)), wordOccurrences("Robert"))
 
-
   @Test def `sentenceOccurrences: abcd e (5pts)`: Unit =
     assertEquals(List(('a', 1), ('b', 1), ('c', 1), ('d', 1), ('e', 1)), sentenceOccurrences(List("abcd", "e")))
 
