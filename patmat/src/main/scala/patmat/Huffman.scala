@@ -171,8 +171,7 @@ trait Huffman extends HuffmanInterface {
     val leaves = makeOrderedLeafList(pairs)
     until(singleton, combine)(leaves).head
   }
-
-
+  
   // Part 3: Decoding
 
   type Bit = Int
