@@ -32,7 +32,50 @@ class AnagramsSuite {
     val lard = List(('a', 1), ('d', 1), ('l', 1), ('r', 1))
     val r = List(('r', 1))
     val lad = List(('a', 1), ('d', 1), ('l', 1))
+
     assertEquals(lad, subtract(lard, r))
+  }
+
+  @Test def `subtract: abc - abc (10pts)`: Unit = {
+    val abc = List(('a', 1), ('b', 1), ('c', 1))
+    val empty = List()
+
+    assertEquals(empty, subtract(abc, abc))
+  }
+
+  @Test def `subtract: abc - abcd (10pts)`: Unit = {
+    val abc = List(('a', 1), ('b', 1), ('c', 1))
+    val abcd = List(('a', 1), ('d', 1), ('b', 1), ('c', 1))
+    val empty = List()
+
+    assertEquals(empty, subtract(abc, abcd))
+  }
+
+  @Test def `subtract: abc - abcup (10pts)`: Unit = {
+    val abc = List(('a', 1), ('b', 1), ('c', 1))
+    val abcUp = List(('a', 2), ('b', 2), ('c', 1))
+    val res = List(('a', 1), ('b', 1))
+
+    assertEquals(res, subtract(abcUp, abc))
+  }
+
+  @Test def `subtract: a - empty (10pts)`: Unit = {
+    val abc = List(('a', 1))
+    val empty = List()
+
+    assertEquals(abc, subtract(abc, empty))
+  }
+
+  @Test def `subtract: empty - empty (10pts)`: Unit = {
+    val empty = List()
+    assertEquals(empty, subtract(empty, empty))
+  }
+
+  @Test def `subtract: sentence - word`: Unit = {
+    val sent = sentenceOccurrences(List("hi", "there"))
+    val occ = List(('e', 1), ('t', 1))
+    val expected = List(('e', 1), ('h', 2), ('i', 1), ('r', 1))
+    assertEquals(expected, subtract(sent, occ))
   }
 
   @Test def `combinations: [] (8pts)`: Unit =
